@@ -1,58 +1,51 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const QRCode = require('qrcode');
-const { v4: uuidv4 } = require('uuid');
-const path = require('path');
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to handle form submission
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent default form submission behavior
 
-const app = express();
-const port = 3000;
+        // Get form data
+        var formData = {
+            itemCode: document.getElementById('item_code').value,
+            itemQuantity: document.getElementById('item_quantity').value,
+            grnNo: document.getElementById('grn_no').value,
+            grnDate: document.getElementById('grn_date').value,
+            materialType: document.getElementById('material_type').value,
+            dimension: document.getElementById('dimension').value
+        };
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+        // Generate QR code
+        var qrCodeContainer = document.getElementById('qr_code');
+        qrCodeContainer.innerHTML = ''; // Clear previous QR code if exists
+        var qr = new QRCode(qrCodeContainer, {
+            text: JSON.stringify(formData),
+            width: 128,
+            height: 128
+        });
 
-// Routes
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+        // Convert QR code to data URL
+        var qrDataURL = qr.toDataURL();
 
-app.post('/generate_qr', async (req, res) => {
-    // Extract data from the form
-    const { item_code, item_quantity, grn_no, grn_date, material_type, dimension } = req.body;
+        // Create download button
+        var downloadButton = document.createElement('button');
+        downloadButton.textContent = 'Download QR Code';
+        downloadButton.onclick = function() {
+            // Create temporary link element
+            var link = document.createElement('a');
+            link.href = qrDataURL;
+            link.download = 'qrcode.png';
 
-    // Generate QR code data
-    const date_of_arrival = new Date().toISOString().slice(0, 10);
-    const serial_number = generateSerialNumber();
-    const qr_data = `Date: ${date_of_arrival}, Serial Number: ${serial_number}, Item Code: ${item_code}, Item Quantity: ${item_quantity}, GRN No.: ${grn_no}, GRN Date: ${grn_date}, Material Type: ${material_type}, Dimension: ${dimension}`;
+            // Trigger click on link
+            document.body.appendChild(link);
+            link.click();
 
-    // Generate QR code image
-    const qr_code_image = await generateQRCode(qr_data);
+            // Clean up
+            document.body.removeChild(link);
+        };
 
-    // Save QR code image to temporary file
-    const temp_file_path = path.join(__dirname, 'temp', 'QR_Code.png');
-    qr_code_image.pipe(fs.createWriteStream(temp_file_path));
-
-    // Send QR code image as file download
-    res.download(temp_file_path, 'QR_Code.png');
-});
-
-// Generate serial number
-function generateSerialNumber() {
-    return uuidv4();
-}
-
-// Generate QR code
-async function generateQRCode(data) {
-    try {
-        return await QRCode.toFileStream(data);
-    } catch (error) {
-        console.error('Error generating QR code:', error);
-        throw error;
+        // Append download button
+        qrCodeContainer.appendChild(downloadButton);
     }
-}
 
-// Start server
-app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+    // Add form submission event listener
+    document.getElementById('materialForm').addEventListener('submit', handleSubmit);
 });
