@@ -70,8 +70,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const qrCodeText = JSON.stringify(formDataObject);
 
         // Generate QR code
-        const qrCodeCanvas = document.createElement("canvas");
-        const qrCode = new QRCode(qrCodeCanvas, {
+        const qrCodeContainer = document.getElementById("qr_code");
+        qrCodeContainer.innerHTML = ""; // Clear any existing QR code
+        const qrCode = new QRCode(qrCodeContainer, {
             text: qrCodeText,
             width: 128,
             height: 128,
@@ -80,14 +81,11 @@ document.addEventListener("DOMContentLoaded", function() {
             correctLevel: QRCode.CorrectLevel.H
         });
 
-        // Create a PDF document
-        const pdf = new jsPDF();
-
-        // Add QR code image to PDF
-        const qrCodeDataURL = qrCodeCanvas.toDataURL("image/png");
-        pdf.addImage(qrCodeDataURL, "PNG", 10, 10, 50, 50);
-
-        // Download PDF
-        pdf.save("qr_code.pdf");
+        // Download QR code image
+        const qrCodeImage = qrCodeContainer.querySelector("img");
+        const downloadLink = document.createElement("a");
+        downloadLink.href = qrCodeImage.src;
+        downloadLink.download = "qrcode.png";
+        downloadLink.click();
     });
 });
