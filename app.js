@@ -1,91 +1,47 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Function to handle form submission
-//     function handleSubmit(event) {
-//         event.preventDefault(); // Prevent default form submission behavior
 
-//         // Get form data
-//         var formData = {
-//             itemCode: document.getElementById('item_code').value,
-//             itemQuantity: document.getElementById('item_quantity').value,
-//             grnNo: document.getElementById('grn_no').value,
-//             grnDate: document.getElementById('grn_date').value,
-//             materialType: document.getElementById('material_type').value,
-//             dimension: document.getElementById('dimension').value
-//         };
-
-//         // Generate QR code
-//         var qrCodeContainer = document.getElementById('qr_code');
-//         qrCodeContainer.innerHTML = ''; // Clear previous QR code if exists
-//         var qr = new QRCode(qrCodeContainer, {
-//             text: JSON.stringify(formData),
-//             width: 128,
-//             height: 128
-//         });
-
-//         // Convert QR code to data URL
-//         var qrDataURL = qr.toDataURL();
-
-//         // Create download button
-//         var downloadButton = document.createElement('button');
-//         downloadButton.textContent = 'Download QR Code';
-//         downloadButton.onclick = function() {
-//             // Create temporary link element
-//             var link = document.createElement('a');
-//             link.href = qrDataURL;
-//             link.download = 'qrcode.png';
-
-//             // Trigger click on link
-//             document.body.appendChild(link);
-//             link.click();
-
-//             // Clean up
-//             document.body.removeChild(link);
-//         };
-
-//         // Append download button
-//         qrCodeContainer.appendChild(downloadButton);
-//     }
-
-//     // Add form submission event listener
-//     document.getElementById('materialForm').addEventListener('submit', handleSubmit);
-// });
-
-// Wait for the DOM to be fully loaded
-
-// Wait for the DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function() {
     // Select the form and listen for its submission
     document.getElementById("materialForm").addEventListener("submit", function(event) {
         // Prevent the default form submission
         event.preventDefault();
-        
+
         // Get form data
         const formData = new FormData(event.target);
         const formDataObject = {};
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
-
+        const formattedData = "Date: " + formDataObject["GRN Date"] +
+                              ", Item Code: " + formDataObject["Item Code"] +
+                              ", Item Quantity: " + formDataObject["Item Quantity"] +
+                              ", GRN No.: " + formDataObject["GRN No"] +
+                              ", GRN Date: " + formDataObject["GRN Date"] +
+                              ", Material Type: " + formDataObject["Material Type"] +
+                              ", Dimension: " + formDataObject["Dimension"];
         // Generate QR code text
-        const qrCodeText = JSON.stringify(formDataObject);
+        // const qrCodeText = JSON.stringify(formDataObject);
+        const qrCodeText = formattedData;
 
         // Generate QR code
         const qrCodeContainer = document.getElementById("qr_code");
         qrCodeContainer.innerHTML = ""; // Clear any existing QR code
         const qrCode = new QRCode(qrCodeContainer, {
             text: qrCodeText,
-            width: 128,
-            height: 128,
+            width: 500,
+            height: 500,
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
         });
 
-        // Download QR code image
+        // Wait for the QR code image to load
         const qrCodeImage = qrCodeContainer.querySelector("img");
-        const downloadLink = document.createElement("a");
-        downloadLink.href = qrCodeImage.src;
-        downloadLink.download = "qrcode.png";
-        downloadLink.click();
+        qrCodeImage.onload = function() {
+            // Download QR code image
+            const downloadLink = document.createElement("a");
+            downloadLink.href = qrCodeImage.src;
+            downloadLink.download = "qrcode.jpg";
+            downloadLink.click();
+        };
     });
 });
