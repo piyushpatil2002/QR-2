@@ -90,3 +90,7 @@ button {
 button:hover {
   background-color: #00308F; /* dark blue */
 }
+
+#qr_code{
+  display: none;
+}
