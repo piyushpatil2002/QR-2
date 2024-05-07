@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raw Material Management</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
 </head>
 <body>
     <div class="container">
@@ -18,27 +22,28 @@
                 <div class="row">
                     <div class="input-group">
                         <label for="item_code">Item Code:</label>
-                        <input type="text" id="item_code" name="Item Code">
+                        <input type="text" id="item_code" name="Item Code" required>
                     </div>
                     <div class="input-group">
                         <label for="item_quantity">Item Quantity:</label>
-                        <input type="text" id="item_quantity" name="Item Quantity">
+                        <input type="text" id="item_quantity" name="Item Quantity" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-group">
                         <label for="grn_no">GRN No.:</label>
-                        <input type="text" id="grn_no" name="GRN No">
+                        <input type="text" id="grn_no" name="GRN No" required>
                     </div>
                     <div class="input-group">
                         <label for="grn_date">GRN Date:</label>
-                        <input type="date" id="grn_date" name="GRN Date">
+                        <input type="date" id="grn_date" name="GRN Date" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-group">
                         <label for="material_type">Material Type:</label>
-                        <select id="material_type" name="Material Type" class="select-dropdown">
+                        <select id="material_type" name="Material Type" class="select-dropdown" required>
+                            <option value="Material Type 1"></option required>
                             <option value="Material Type 1">Steel</option>
                             <option value="Material Type 2">Cold Steel</option>
                             <option value="Material Type 3">Aluminium</option>
@@ -46,12 +51,13 @@
                     </div>
                     <div class="input-group">
                         <label for="dimension">Dimensions:</label>
-                        <select id="dimension" name="Dimension" class="select-dropdown">
+                        <select id="dimension" name="Dimension" class="select-dropdown" required>
+                            <option value="Dimension 1"></option>
                             <option value="Dimension 1">Dimension 1</option>
                             <option value="Dimension 2">Dimension 2</option>
                             <option value="Dimension 3">Dimension 3</option>
                         </select>
-                    </div>
+                    </div>  
                 </div>
                 <button type="submit">Generate QR Code</button>
             </form>
@@ -59,8 +65,8 @@
         <div id="qr_code" class="qr-container"></div>
     </div>
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> 
+    
     <script src="app.js"></script>
 </body>
 </html>
